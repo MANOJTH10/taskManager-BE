@@ -12,8 +12,8 @@ const TaskSchema = new mongoose.Schema(
         priority: { type: String, enum: ["low", "medium", "high"], default: "medium" },
         status: { type: String, enum: ["pending", "in-progress", "completed"], default: "pending" },
         dueDate: { type: Date, required: true },
-        assignedTo: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],  // Reference to User model
-        createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // Reference to User model
+        assignedTo: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],  // Reference to user model
+        createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true }, // Reference to user model
         attachments: [{ type: String }], // Array of file paths or URLs
         todoChecklist: [todoSchema], // Subdocument array for checklist items
         progress: { type: Number, default:0 } // Progress percentage (0-100)
