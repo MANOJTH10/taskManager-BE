@@ -24,7 +24,7 @@ const admin = (req, res, next) => {
     if (req.user && req.user.role === "admin") {                             // Assuming user model has a 'role' field 
         next();
     } else {
-        res.status(403).json({ message: "Access denied, admine only" });
+        res.status(403).json({ message: "Access denied, admin only" });
     }
 };
 module.exports = { protect, admin };

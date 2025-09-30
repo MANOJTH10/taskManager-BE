@@ -12,8 +12,7 @@ const generateToken = (user) => {
 //@access  Public
 const registeruser = async (req, res) => {
     try {
-        const { name, email, password, profileImageUrl, admineInviteCode } = 
-        req.body;
+    const { name, email, password, profileImageUrl, adminInviteToken } = req.body;
 
         // Check if user already exists
         const userExists = await user.findOne({ email });
@@ -21,13 +20,13 @@ const registeruser = async (req, res) => {
             return res.status(400).json({ message: "user already exists" });
         }
 
-        //Determine user role: Admine if correct token is provided, otherwise Member
+        // Determine user role: admin if correct token is provided, otherwise member
         let role = "member";
         if (
-            admineInviteToken &&
-            admineInviteToken === process.env.ADMINE_INVITE_TOKEN
+            adminInviteToken &&
+            adminInviteToken === process.env.ADMIN_INVITE_TOKEN
         ) {
-            role = "admine";
+            role = "admin";
         }
 
         // Hash password
@@ -35,7 +34,7 @@ const registeruser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Create user
-        const user = await user.create({
+        const newUser = await user.create({
             name,
             email,
             password: hashedPassword,
@@ -45,15 +44,15 @@ const registeruser = async (req, res) => {
 
         // Return user data with JWT
         res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            profileImageUrl: user.profileImageUrl,
-            token: generateToken(user._id),
+            _id: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+            role: newUser.role,
+            profileImageUrl: newUser.profileImageUrl,
+            token: generateToken(newUser),
         });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message});
+        res.status(500).json({ message: "Server error", error: error.message });
     }
 };
 
