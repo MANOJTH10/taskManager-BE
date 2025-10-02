@@ -8,6 +8,12 @@ const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
+const fs = require('fs');
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 //Middleware to handle CORS
 app.use(
     cors({
@@ -23,6 +29,9 @@ connectDB();
 // Middleware to parse JSON bodies
 app.use(express.json()); 
 
+// Serve uploaded static files
+app.use('/uploads', express.static(uploadsDir));
+
 //Routes
 app.use("/api/auth", authRoutes);
 // app.use("/api/users", userRoutes);
@@ -30,7 +39,7 @@ app.use("/api/auth", authRoutes);
 // app.user("/api/reports", reportRoutes);
 
 //Start Server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

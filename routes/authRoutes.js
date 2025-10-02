@@ -1,13 +1,22 @@
 const express = require("express");
-const { registeruser, loginuser, getuserProfile, updateuserProfile } = require("../controllers/authControllers");
+const { registerUser, loginUser, getUserProfile, updateUserProfile } = require("../controllers/authControllers");
 const { protect } = require("../middlewares/authMiddleware");
+const upload = require("../middlewares/uploadMiddleware");
 
 const router = express.Router();
 
 // Auth Routes
-router.post("/register", registeruser);               //.Register user
-router.post("/login", loginuser);                     //.Login user
-router.get("/profile", protect, getuserProfile);     //.Get user profile
-router.put("/profile", protect, updateuserProfile);  //.Update user profile
+router.post("/register", registerUser);               //.Register user
+router.post("/login", loginUser);                     //.Login user
+router.get("/profile", protect, getUserProfile);     //.Get user profile
+router.put("/profile", protect, updateUserProfile);  //.Update user profile
 
-module.exports = router;
+router.post("/upload-image", upload.single("image"), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: "No file upload" });
+    }
+    const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+    res.status(200).json({ imageUrl });
+});
+
+module.exports = router;         
