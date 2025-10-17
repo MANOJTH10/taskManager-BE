@@ -1,0 +1,12 @@
+[dotenv@17.2.2] injecting env (5) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+Server is running on port 8000
+MongoDB connected
+Incoming request: POST /api/tasks
+Incoming request: POST /api/tasks
+Incoming request: POST /api/tasks
+Incoming request: POST /api/tasks
+Incoming request: POST /api/tasks
+Incoming request: POST /api/tasks
+Incoming request: POST /api/tasks
+Incoming request: POST /api/tasks
+Incoming request: POST /api/tasks

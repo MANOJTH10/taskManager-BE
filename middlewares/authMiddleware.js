@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const user = require("../models/User");
+const User = require("../models/User");
 
 // Middleware to protect routes
 const protect = async (req, res, next) => {
@@ -9,7 +9,7 @@ const protect = async (req, res, next) => {
         if (token && token.startsWith("Bearer ")) {
             token = token.split(" ")[1];                                    // Extract token from "Bearer <token>"
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            req.user = await user.findById(decoded.id).select("-password"); // Attach user to request, excluding password
+            req.user = await User.findById(decoded.id).select("-password"); // Attach user to request, excluding password
             next();
         } else {
             res.status(401).json({ message: "Not authorized, no token" });
@@ -20,11 +20,13 @@ const protect = async (req, res, next) => {
 };
 
 // Middleware for Admin-only access
-const admin = (req, res, next) => {
-    if (req.user && req.user.role === "admin") {                             // Assuming user model has a 'role' field 
+const adminOnly = (req, res, next) => {
+    if (req.user && req.user.role === "admin") {
         next();
     } else {
         res.status(403).json({ message: "Access denied, admin only" });
     }
 };
-module.exports = { protect, admin };
+
+// Export both names for backward compatibility
+module.exports = { protect, adminOnly, admin: adminOnly };
